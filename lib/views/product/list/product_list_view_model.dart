@@ -14,4 +14,12 @@ class ProductListViewModel extends StateNotifier<List<Product>> {
   void onLoad(List<Product> products) {
     state = products;
   }
+
+  void addProduct(Product product) {
+    state = [...state, product];
+  }
+
+  void removeProduct(int id) {
+    state = state.where((element) => element.id != id).toList();
+  }
 }

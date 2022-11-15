@@ -18,4 +18,17 @@ class ProductController {
     List<Product> productList = _ref.read(productHttpRepository).findAll();
     _ref.read(productListViewModel.notifier).onLoad(productList);
   }
+
+  void insert(Product productReqDto) {
+    Product productRespDto =
+        _ref.read(productHttpRepository).insert(productReqDto);
+    _ref.read(productListViewModel.notifier).addProduct(productRespDto);
+  }
+
+  void deleteById(int id) {
+    int result = _ref.read(productHttpRepository).deleteById(id);
+    if (result == 1) {
+      _ref.read(productListViewModel.notifier).removeProduct(id);
+    }
+  }
 }
