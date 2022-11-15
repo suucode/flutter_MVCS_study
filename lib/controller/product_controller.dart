@@ -11,12 +11,11 @@ final productController = Provider<ProductController>((ref) {
 });
 
 class ProductController {
-  ProductHttpRepository repo = ProductHttpRepository();
   final Ref _ref;
   ProductController(this._ref);
 
   void findAll() {
-    List<Product> productList = repo.findAll();
+    List<Product> productList = _ref.read(productHttpRepository).findAll();
     _ref.read(productListViewModel.notifier).onLoad(productList);
   }
 }
