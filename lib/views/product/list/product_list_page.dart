@@ -10,12 +10,13 @@ class ProductListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pm = ref.watch(productListViewModel);
     final pc = ref.read(productController);
-    pc.findAll();
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          pc.findAll();
+        },
       ),
       appBar: AppBar(title: Text("product_list_page")),
       body: ListView.builder(
