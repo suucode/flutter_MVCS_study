@@ -10,17 +10,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final productListViewModel =
     StateNotifierProvider<ProductListViewModel, List<Product>>((ref) {
-  return ProductListViewModel([], ref)..initViewModel();
+  return ProductListViewModel([], ref);
 });
 
 class ProductListViewModel extends StateNotifier<List<Product>> {
   Ref _ref;
   ProductListViewModel(super.state, this._ref) {
     //_ref.read(_initProvider);
-  }
-
-  Future<void> initViewModel() async {
-    state = await _ref.read(productHttpRepository).findAll();
   }
 
   void refresh(List<Product> productsDto) {

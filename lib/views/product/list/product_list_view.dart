@@ -11,13 +11,14 @@ class ProductListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pm = ref.watch(productListViewModel);
     final pc = ref.read(productController);
+    pc.findAll();
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           //pc.insert(Product(4, '호박', 2000));
-          pc.findAll();
+          //pc.findAll();
         },
       ),
       appBar: AppBar(title: Text("product_list_page")),
@@ -26,7 +27,7 @@ class ProductListView extends ConsumerWidget {
         itemBuilder: (context, index) => ListTile(
           key: ValueKey(pm[index].id),
           onTap: () {
-            pc.deleteById(pm[index].id);
+            //pc.deleteById(pm[index].id);
           },
           onLongPress: () {
             //pc.updateById();
