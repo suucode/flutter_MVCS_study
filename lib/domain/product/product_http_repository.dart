@@ -1,33 +1,40 @@
+import 'dart:convert';
+
+import 'package:data_app/domain/http_connector.dart';
 import 'package:data_app/domain/product/product.dart';
+import 'package:data_app/views/product/list/product_list_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 
 final productHttpRepository = Provider<ProductHttpRepository>((ref) {
-  return ProductHttpRepository();
+  return ProductHttpRepository(ref);
 });
 
-class ProductHttpRepository {
-  // fake data
-  List<Product> list = [
-    Product(1, "바나나", 1000),
-    Product(2, "딸기", 2000),
-    Product(3, "참외", 3000)
-  ];
+List<Product> list = [];
 
-  Product findById(int id) {
-    // http 통신 코드
-    Product product = list.singleWhere((product) => product.id == id);
+class ProductHttpRepository {
+  Ref _ref;
+  ProductHttpRepository(this._ref);
+
+  Future<Product> findById(int id) async {
+    Response response =
+        await _ref.read(httpConnector).get("/api/product/${id}");
+    Product product = Product.fromJson(jsonDecode(response.body));
     return product;
   }
 
-  List<Product> findAll() {
-    return list;
+  Future<List<Product>> findAll() async {
+    Response response = await _ref.read(httpConnector).get("/api/product");
+    List<dynamic> body = jsonDecode(response.body)["data"];
+    List<Product> productList = body.map((e) => Product.fromJson(e)).toList();
+    return productList;
   }
 
   // name, price
   Product insert(Product product) {
     // http 통신 코드 (product 전송)
     product.id = 4;
-    list = [...list, product];
+
     return product;
   }
 
