@@ -11,6 +11,9 @@ final productController = Provider<ProductController>((ref) {
   return ProductController(ref);
 });
 
+/**
+ * 컨트롤러 : 비지니스 로직 담당
+ */
 class ProductController {
   final context = navigatorKey.currentContext!;
   final Ref _ref;
