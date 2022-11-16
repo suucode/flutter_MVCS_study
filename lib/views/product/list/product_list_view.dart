@@ -1,15 +1,16 @@
 import 'package:data_app/controller/product_controller.dart';
 import 'package:data_app/domain/product/product.dart';
-import 'package:data_app/views/product/list/product_list_view_model.dart';
+import 'package:data_app/views/product/list/product_list_view_store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductListPage extends ConsumerWidget {
-  const ProductListPage({Key? key}) : super(key: key);
+class ProductListView extends ConsumerWidget {
+  const ProductListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pm = ref.watch(productListViewModel);
+    final pm = ref.watch(productListViewStore);
     final pc = ref.read(productController);
 
     return Scaffold(
@@ -23,8 +24,12 @@ class ProductListPage extends ConsumerWidget {
       body: ListView.builder(
         itemCount: pm.length,
         itemBuilder: (context, index) => ListTile(
+          key: ValueKey(pm[index].id),
           onTap: () {
             pc.deleteById(pm[index].id);
+          },
+          onLongPress: () {
+            pc.updateById(pm[index].id, Product(0, "${pm[index].name}", 60000));
           },
           leading: Icon(Icons.account_balance_wallet),
           title: Text(

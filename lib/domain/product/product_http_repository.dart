@@ -35,8 +35,7 @@ class ProductHttpRepository {
     // http 통신 코드
     list = list.map((product) {
       if (product.id == id) {
-        product = productDto;
-        return product;
+        return productDto;
       } else {
         return product;
       }
@@ -48,6 +47,10 @@ class ProductHttpRepository {
   int deleteById(int id) {
     // http 통신 코드
     list = list.where((product) => product.id != id).toList();
-    return 1;
+    if (id == 4) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 }
