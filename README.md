@@ -1,16 +1,31 @@
-# data_app
 
-A new Flutter project.
+## FutureProvider로 데이터 다운로드 받고, ViewModel 생성자에서 초기화 하는 법
+```dart
+final _initProvider = FutureProvider((ref) async {
+  List<Product> productList = await ref.read(productHttpRepository).findAll();
+  ref.read(productListViewModel.notifier).refresh(productList);
+  return productList;
+});
 
-## Getting Started
+final productListViewModel =
+StateNotifierProvider<ProductListViewModel, List<Product>>((ref) {
+  return ProductListViewModel([], ref);
+});
 
-This project is a starting point for a Flutter application.
+ProductListViewModel(super.state, this._ref) {
+  _ref.read(_initProvider);
+}
+```
 
-A few resources to get you started if this is your first Flutter project:
+## initViewModel 로 repository 초기화 하는 법
+- httpRepository에 연결되는게 맘에 안듬
+```dart
+final productListViewModel =
+    StateNotifierProvider<ProductListViewModel, List<Product>>((ref) {
+  return ProductListViewModel([], ref)..initViewModel();
+});
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  Future<void> initViewModel() async {
+    state = await _ref.read(productHttpRepository).findAll();
+  }
+```

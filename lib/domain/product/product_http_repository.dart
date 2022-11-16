@@ -2,15 +2,12 @@ import 'dart:convert';
 
 import 'package:data_app/domain/http_connector.dart';
 import 'package:data_app/domain/product/product.dart';
-import 'package:data_app/views/product/list/product_list_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 
 final productHttpRepository = Provider<ProductHttpRepository>((ref) {
   return ProductHttpRepository(ref);
 });
-
-List<Product> list = [];
 
 class ProductHttpRepository {
   Ref _ref;
@@ -25,9 +22,13 @@ class ProductHttpRepository {
 
   Future<List<Product>> findAll() async {
     Response response = await _ref.read(httpConnector).get("/api/product");
-    List<dynamic> body = jsonDecode(response.body)["data"];
-    List<Product> productList = body.map((e) => Product.fromJson(e)).toList();
-    return productList;
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body)["data"];
+      List<Product> productList = body.map((e) => Product.fromJson(e)).toList();
+      return productList;
+    } else {
+      return [];
+    }
   }
 
   // name, price
@@ -40,7 +41,7 @@ class ProductHttpRepository {
 
   Product updateById(int id, Product productDto) {
     // http 통신 코드
-    list = list.map((product) {
+    final list = [].map((product) {
       if (product.id == id) {
         return productDto;
       } else {
@@ -53,7 +54,7 @@ class ProductHttpRepository {
 
   int deleteById(int id) {
     // http 통신 코드
-    list = list.where((product) => product.id != id).toList();
+    final list = [].where((product) => product.id != id).toList();
     if (id == 4) {
       return -1;
     } else {

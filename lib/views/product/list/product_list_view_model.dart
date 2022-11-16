@@ -2,21 +2,18 @@ import 'package:data_app/domain/product/product.dart';
 import 'package:data_app/domain/product/product_http_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// final _initProvider = FutureProvider((ref) async {
-//   List<Product> productList = await ref.read(productHttpRepository).findAll();
-//   ref.read(productListViewModel.notifier).onLoad(productList);
-//   return productList;
-// });
-
 final productListViewModel =
     StateNotifierProvider<ProductListViewModel, List<Product>>((ref) {
-  return ProductListViewModel([], ref);
+  return ProductListViewModel([], ref)..initViewModel();
 });
 
 class ProductListViewModel extends StateNotifier<List<Product>> {
   Ref _ref;
-  ProductListViewModel(super.state, this._ref) {
-    //_ref.read(_initProvider);
+  ProductListViewModel(super.state, this._ref);
+
+  Future<void> initViewModel() async {
+    print("실행됨");
+    state = await _ref.read(productHttpRepository).findAll();
   }
 
   void refresh(List<Product> productsDto) {
